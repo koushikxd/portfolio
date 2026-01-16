@@ -11,7 +11,7 @@ export function Footer() {
           <VisitorCount />
         </div>
 
-        <nav className="flex items-center gap-4">
+        <nav className="flex items-center gap-2 -mr-1">
           {SOCIALS.map((social) => (
             <Link
               key={social.name}

@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 export function Projects() {
   return (
     <section className="space-y-4">
-      <div className="flex items-center justify-between border-b border-muted/80 pb-2">
+      <div className="flex items-center justify-between border-b-2 border-muted/80 pb-2 border-dashed">
         <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
           01 // Projects
         </h2>
@@ -15,10 +15,10 @@ export function Projects() {
       </div>
 
       <div className="flex flex-col gap-6">
-        {PROJECTS.map((project, index) => (
+        {PROJECTS.map((project, _) => (
           <div
             key={project.name}
-            className="group flex flex-col gap-2 relative pl-4 border-l border-transparent hover:border-foreground transition-colors duration-300"
+            className="group flex flex-col gap-2 relative pl-2 border-l border-transparent hover:border-foreground transition-colors duration-300"
           >
             <div className="absolute -left-px top-0 h-full w-px bg-foreground scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300" />
 
@@ -32,7 +32,7 @@ export function Projects() {
                 </h3>
               </div>
 
-              <span className="text-xs text-muted-foreground font-mono">
+              <span className="text-xs text-muted-foreground font-mono pr-2">
                 [{project.language}]
               </span>
             </div>
@@ -41,7 +41,7 @@ export function Projects() {
               {project.description}
             </p>
 
-            <div className="flex gap-4 text-[10px] uppercase tracking-wider font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-1 group-hover:translate-y-0">
+            <div className="flex gap-4 text-[10px] uppercase tracking-wider font-medium">
               {project.github && (
                 <Link
                   href={project.github}
@@ -64,13 +64,13 @@ export function Projects() {
           </div>
         ))}
 
-        <div className="pt-2 flex justify-end">
+        <div className="pt-2 flex justify-end pr-2">
           <Link
             href="https://github.com/koushikxd?tab=repositories"
             target="_blank"
             className="group inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors font-mono uppercase tracking-wider"
           >
-            <span>View All</span>
+            <span>View Archive</span>
             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>

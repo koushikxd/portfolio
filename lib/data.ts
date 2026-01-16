@@ -8,13 +8,6 @@ export const PROJECTS = [
     github: "https://github.com/koushikxd/Cue",
   },
   {
-    name: ".nvim",
-    description: "My chronically restless Neovim config with commitment issues",
-    language: "Lua",
-    url: "#",
-    github: "https://github.com/koushikxd/.nvim",
-  },
-  {
     name: "resu.nvim",
     description: "a neovim plugin for anyone using claude code/AI coding tools",
     language: "Lua",
@@ -34,7 +27,6 @@ export const PROJECTS = [
     description:
       "Send is a cli tool to instantly share files, folders and links with mobile devices",
     language: "TypeScript",
-    url: "https://www.npmjs.com/package/send-cli",
     github: "https://github.com/koushikxd/send-cli",
   },
   {
