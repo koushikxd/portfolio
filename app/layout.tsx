@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { Doto } from "next/font/google";
 import "./globals.css";
+
+const doto = Doto({
+  subsets: ["latin"],
+  variable: "--font-doto",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Koushik - Portfolio",
@@ -40,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${doto.variable}`}>
       <body className="antialiased">{children}</body>
     </html>
   );

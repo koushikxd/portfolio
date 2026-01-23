@@ -2,7 +2,7 @@ export function Hero() {
   return (
     <section className="flex flex-col gap-6">
       <div className="space-y-4">
-        <h1 className="text-xl sm:text-2xl font-medium tracking-tight text-foreground uppercase">
+        <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white uppercase font-(family-name:--font-doto)">
           Koushik
         </h1>
         <div className="flex flex-col gap-2 text-sm text-muted-foreground max-w-xl leading-relaxed pl-0">

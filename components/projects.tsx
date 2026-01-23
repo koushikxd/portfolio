@@ -1,10 +1,67 @@
+"use client";
+
 import { PROJECTS } from "@/lib/data";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 
 export function Projects() {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [smoothPosition, setSmoothPosition] = useState({ x: 0, y: 0 });
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const lerp = (start: number, end: number, factor: number) => {
+      return start + (end - start) * factor;
+    };
+
+    const animate = () => {
+      setSmoothPosition((prev) => ({
+        x: lerp(prev.x, mousePosition.x, 0.15),
+        y: lerp(prev.y, mousePosition.y, 0.15),
+      }));
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [mousePosition]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      setMousePosition({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    }
+  };
+
+  const handleMouseEnter = (index: number) => {
+    setHoveredIndex(index);
+    setIsVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(null);
+    setIsVisible(false);
+  };
+
   return (
-    <section className="space-y-4">
+    <section
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="space-y-4"
+    >
       <div className="flex items-center justify-between border-b-2 border-muted/80 pb-2 border-dashed">
         <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
           01 // Projects
@@ -14,19 +71,50 @@ export function Projects() {
         </span>
       </div>
 
+      <div
+        className="pointer-events-none fixed z-50 overflow-hidden rounded-xl shadow-2xl"
+        style={{
+          left: containerRef.current?.getBoundingClientRect().left ?? 0,
+          top: containerRef.current?.getBoundingClientRect().top ?? 0,
+          transform: `translate3d(${smoothPosition.x + 20}px, ${smoothPosition.y - 100}px, 0)`,
+          opacity: isVisible ? 1 : 0,
+          scale: isVisible ? 1 : 0.8,
+          transition:
+            "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), scale 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      >
+        <div className="relative w-[280px] h-[180px] bg-secondary rounded-xl overflow-hidden">
+          {PROJECTS.map((project, index) => (
+            <Image
+              key={project.name}
+              src={project.image || "/placeholder.svg"}
+              alt={project.name}
+              width={280}
+              height={180}
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out"
+              style={{
+                opacity: hoveredIndex === index ? 1 : 0,
+                scale: hoveredIndex === index ? 1 : 1.1,
+                filter: hoveredIndex === index ? "none" : "blur(10px)",
+              }}
+            />
+          ))}
+          <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
+        </div>
+      </div>
+
       <div className="flex flex-col gap-6">
-        {PROJECTS.map((project, _) => (
+        {PROJECTS.map((project, index) => (
           <div
             key={project.name}
             className="group flex flex-col gap-2 relative pl-2 border-l border-transparent hover:border-foreground transition-colors duration-300"
+            onMouseEnter={() => handleMouseEnter(index)}
+            onMouseLeave={handleMouseLeave}
           >
             <div className="absolute -left-px top-0 h-full w-px bg-foreground scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300" />
 
             <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
               <div className="flex items-baseline gap-2">
-                {/* <span className="text-xs text-muted-foreground font-mono">
-                  {(index + 1).toString().padStart(2, "0")}
-                </span> */}
                 <h3 className="font-medium text-sm text-foreground">
                   {project.name}
                 </h3>

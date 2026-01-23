@@ -6,6 +6,7 @@ export const PROJECTS = [
     language: "TypeScript",
     url: "https://www.cuedot.tech/home",
     github: "https://github.com/koushikxd/Cue",
+    image: "/projects/cue.png",
   },
   {
     name: "resu.nvim",
@@ -13,6 +14,7 @@ export const PROJECTS = [
     language: "Lua",
     url: "#",
     github: "https://github.com/koushikxd/resu.nvim",
+    image: "/projects/resu.png",
   },
   {
     name: "dash-cli",
@@ -21,6 +23,7 @@ export const PROJECTS = [
     language: "TypeScript",
     url: "https://dash-cli.vercel.app/",
     github: "https://github.com/koushikxd/dash-cli",
+    image: "/projects/dash.png",
   },
   {
     name: "send-cli",
@@ -28,6 +31,7 @@ export const PROJECTS = [
       "Send is a cli tool to instantly share files, folders and links with mobile devices",
     language: "TypeScript",
     github: "https://github.com/koushikxd/send-cli",
+    image: "/projects/send.png",
   },
   {
     name: "Clove",
@@ -35,6 +39,7 @@ export const PROJECTS = [
     language: "TypeScript",
     url: "#",
     github: "https://github.com/koushikxd/clove",
+    image: "/projects/clove.png",
   },
 ];
 
