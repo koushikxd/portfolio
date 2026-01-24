@@ -125,7 +125,7 @@ export function Projects() {
         {PROJECTS.map((project, index) => (
           <div
             key={project.name}
-            className="group flex flex-col gap-2 relative pl-2 border-l border-transparent hover:border-foreground transition-colors duration-300 opacity-0 animate-slide-up-fade"
+            className="group flex flex-col gap-2 relative pl-2 border-l border-transparent hover:border-foreground transition-all duration-300 opacity-0 animate-slide-up-fade active:scale-[0.99]"
             style={{ animationDelay: `${300 + index * 100}ms` }}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
