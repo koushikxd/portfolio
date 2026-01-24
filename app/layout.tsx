@@ -28,12 +28,21 @@ export const metadata: Metadata = {
     title: "Koushik - Portfolio",
     description: "literally my portfolio, that's it",
     siteName: "Koushik",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Koushik - Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Koushik - Portfolio",
     description: "literally my portfolio, that's it",
     creator: "@koushik_xd",
+    images: ["/og.png"],
   },
   robots: {
     index: true,
