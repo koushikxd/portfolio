@@ -48,18 +48,25 @@
   --shadow-color: hsl(0 0% 0%);
   --shadow-2xs: 0px 1px 0px 0px hsl(0 0% 0% / 0);
   --shadow-xs: 0px 1px 0px 0px hsl(0 0% 0% / 0);
-  --shadow-sm: 0px 1px 0px 0px hsl(0 0% 0% / 0),
-    0px 1px 2px -1px hsl(0 0% 0% / 0);
+  --shadow-sm:
+    0px 1px 0px 0px hsl(0 0% 0% / 0), 0px 1px 2px -1px hsl(0 0% 0% / 0);
   --shadow: 0px 1px 0px 0px hsl(0 0% 0% / 0), 0px 1px 2px -1px hsl(0 0% 0% / 0);
-  --shadow-md: 0px 1px 0px 0px hsl(0 0% 0% / 0),
-    0px 2px 4px -1px hsl(0 0% 0% / 0);
-  --shadow-lg: 0px 1px 0px 0px hsl(0 0% 0% / 0),
-    0px 4px 6px -1px hsl(0 0% 0% / 0);
-  --shadow-xl: 0px 1px 0px 0px hsl(0 0% 0% / 0),
-    0px 8px 10px -1px hsl(0 0% 0% / 0);
+  --shadow-md:
+    0px 1px 0px 0px hsl(0 0% 0% / 0), 0px 2px 4px -1px hsl(0 0% 0% / 0);
+  --shadow-lg:
+    0px 1px 0px 0px hsl(0 0% 0% / 0), 0px 4px 6px -1px hsl(0 0% 0% / 0);
+  --shadow-xl:
+    0px 1px 0px 0px hsl(0 0% 0% / 0), 0px 8px 10px -1px hsl(0 0% 0% / 0);
   --shadow-2xl: 0px 1px 0px 0px hsl(0 0% 0% / 0);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
+
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 .dark {
@@ -107,15 +114,15 @@
   --shadow-color: hsl(0 0% 0%);
   --shadow-2xs: 0px 1px 0px 0px hsl(0 0% 0% / 0);
   --shadow-xs: 0px 1px 0px 0px hsl(0 0% 0% / 0);
-  --shadow-sm: 0px 1px 0px 0px hsl(0 0% 0% / 0),
-    0px 1px 2px -1px hsl(0 0% 0% / 0);
+  --shadow-sm:
+    0px 1px 0px 0px hsl(0 0% 0% / 0), 0px 1px 2px -1px hsl(0 0% 0% / 0);
   --shadow: 0px 1px 0px 0px hsl(0 0% 0% / 0), 0px 1px 2px -1px hsl(0 0% 0% / 0);
-  --shadow-md: 0px 1px 0px 0px hsl(0 0% 0% / 0),
-    0px 2px 4px -1px hsl(0 0% 0% / 0);
-  --shadow-lg: 0px 1px 0px 0px hsl(0 0% 0% / 0),
-    0px 4px 6px -1px hsl(0 0% 0% / 0);
-  --shadow-xl: 0px 1px 0px 0px hsl(0 0% 0% / 0),
-    0px 8px 10px -1px hsl(0 0% 0% / 0);
+  --shadow-md:
+    0px 1px 0px 0px hsl(0 0% 0% / 0), 0px 2px 4px -1px hsl(0 0% 0% / 0);
+  --shadow-lg:
+    0px 1px 0px 0px hsl(0 0% 0% / 0), 0px 4px 6px -1px hsl(0 0% 0% / 0);
+  --shadow-xl:
+    0px 1px 0px 0px hsl(0 0% 0% / 0), 0px 8px 10px -1px hsl(0 0% 0% / 0);
   --shadow-2xl: 0px 1px 0px 0px hsl(0 0% 0% / 0);
 }
 
@@ -170,6 +177,42 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+
+  --transition-timing-function-ease-out-cubic: var(--ease-out-cubic);
+  --transition-timing-function-ease-in-out-cubic: var(--ease-in-out-cubic);
+
+  --animate-fade-in: fade-in 300ms var(--ease-out-quad) forwards;
+  --animate-slide-up: slide-up 400ms var(--ease-out-cubic) forwards;
+  --animate-slide-up-fade: slide-up-fade 400ms var(--ease-out-cubic) forwards;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      transform: translateY(10px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-up-fade {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 @layer base {

@@ -62,7 +62,10 @@ export function Projects() {
       onMouseMove={handleMouseMove}
       className="space-y-4"
     >
-      <div className="flex items-center justify-between border-b-2 border-muted/80 pb-2 border-dashed">
+      <div 
+        className="flex items-center justify-between border-b-2 border-muted/80 pb-2 border-dashed opacity-0 animate-slide-up-fade"
+        style={{ animationDelay: "200ms" }}
+      >
         <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
           01 // Projects
         </h2>
@@ -72,15 +75,14 @@ export function Projects() {
       </div>
 
       <div
-        className="pointer-events-none fixed z-50 overflow-hidden rounded-xl shadow-2xl"
+        className="pointer-events-none fixed z-50 overflow-hidden rounded-xl shadow-2xl will-change-transform"
         style={{
           left: containerRef.current?.getBoundingClientRect().left ?? 0,
           top: containerRef.current?.getBoundingClientRect().top ?? 0,
-          transform: `translate3d(${smoothPosition.x + 20}px, ${smoothPosition.y - 100}px, 0)`,
+          transform: `translate3d(${smoothPosition.x + 20}px, ${smoothPosition.y - 100}px, 0) scale(${isVisible ? 1 : 0.95})`,
           opacity: isVisible ? 1 : 0,
-          scale: isVisible ? 1 : 0.8,
           transition:
-            "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), scale 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            "opacity 0.3s var(--ease-out-cubic), transform 0.3s var(--ease-out-cubic)",
         }}
       >
         <div className="relative w-[280px] h-[180px] bg-secondary rounded-xl overflow-hidden">
@@ -107,11 +109,12 @@ export function Projects() {
         {PROJECTS.map((project, index) => (
           <div
             key={project.name}
-            className="group flex flex-col gap-2 relative pl-2 border-l border-transparent hover:border-foreground transition-colors duration-300"
+            className="group flex flex-col gap-2 relative pl-2 border-l border-transparent hover:border-foreground transition-colors duration-300 opacity-0 animate-slide-up-fade"
+            style={{ animationDelay: `${300 + index * 100}ms` }}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="absolute -left-px top-0 h-full w-px bg-foreground scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300" />
+            <div className="absolute -left-px top-0 h-full w-px bg-foreground scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300 ease-out" />
 
             <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
               <div className="flex items-baseline gap-2">
@@ -134,7 +137,7 @@ export function Projects() {
                 <Link
                   href={project.github}
                   target="_blank"
-                  className="hover:text-foreground hover:underline decoration-dotted underline-offset-4"
+                  className="hover:text-foreground hover:underline decoration-dotted underline-offset-4 transition-colors"
                 >
                   Source
                 </Link>
@@ -143,7 +146,7 @@ export function Projects() {
                 <Link
                   href={project.url}
                   target="_blank"
-                  className="hover:text-foreground hover:underline decoration-dotted underline-offset-4"
+                  className="hover:text-foreground hover:underline decoration-dotted underline-offset-4 transition-colors"
                 >
                   Deployment
                 </Link>
@@ -152,14 +155,17 @@ export function Projects() {
           </div>
         ))}
 
-        <div className="pt-2 flex justify-end pr-2">
+        <div 
+          className="pt-2 flex justify-end pr-2 opacity-0 animate-slide-up-fade"
+          style={{ animationDelay: `${300 + PROJECTS.length * 100}ms` }}
+        >
           <Link
             href="https://github.com/koushikxd?tab=repositories"
             target="_blank"
             className="group inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors font-mono uppercase tracking-wider"
           >
             <span>View Archive</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1 duration-300 ease-out" />
           </Link>
         </div>
       </div>
