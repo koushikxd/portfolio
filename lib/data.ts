@@ -41,6 +41,14 @@ export const PROJECTS = [
     github: "https://github.com/koushikxd/clove",
     image: "/projects/clove.png",
   },
+  {
+    name: "open-themes",
+    description:
+      "An experimental extension to extract themes from websites using tailwind css",
+    language: "TypeScript",
+    url: "#",
+    github: "https://github.com/koushikxd/open-themes",
+  },
 ];
 
 export const SOCIALS = [

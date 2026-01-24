@@ -86,21 +86,37 @@ export function Projects() {
         }}
       >
         <div className="relative w-[280px] h-[180px] bg-secondary rounded-xl overflow-hidden">
-          {PROJECTS.map((project, index) => (
-            <Image
-              key={project.name}
-              src={project.image || "/placeholder.svg"}
-              alt={project.name}
-              width={280}
-              height={180}
-              className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out"
-              style={{
-                opacity: hoveredIndex === index ? 1 : 0,
-                scale: hoveredIndex === index ? 1 : 1.1,
-                filter: hoveredIndex === index ? "none" : "blur(10px)",
-              }}
-            />
-          ))}
+          {PROJECTS.map((project, index) =>
+            project.image ? (
+              <Image
+                key={project.name}
+                src={project.image}
+                alt={project.name}
+                width={280}
+                height={180}
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out"
+                style={{
+                  opacity: hoveredIndex === index ? 1 : 0,
+                  scale: hoveredIndex === index ? 1 : 1.1,
+                  filter: hoveredIndex === index ? "none" : "blur(10px)",
+                }}
+              />
+            ) : (
+              <div
+                key={project.name}
+                className="absolute inset-0 flex items-center justify-center bg-secondary transition-all duration-500 ease-out"
+                style={{
+                  opacity: hoveredIndex === index ? 1 : 0,
+                  scale: hoveredIndex === index ? 1 : 1.1,
+                  filter: hoveredIndex === index ? "none" : "blur(10px)",
+                }}
+              >
+                <span className="text-muted-foreground text-sm font-medium">
+                  Work in progress
+                </span>
+              </div>
+            )
+          )}
           <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
         </div>
       </div>
