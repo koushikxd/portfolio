@@ -28,7 +28,5 @@ export function VisitorCount() {
 
   if (count === null) return <span className="animate-pulse">Visitors #0</span>;
 
-  return (
-    <span className="hidden sm:inline">Visitors #{count.toLocaleString()}</span>
-  );
+  return <span>Visitors #{count.toLocaleString()}</span>;
 }

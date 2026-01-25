@@ -62,7 +62,7 @@ export function Projects() {
       onMouseMove={handleMouseMove}
       className="space-y-4"
     >
-      <div 
+      <div
         className="flex items-center justify-between border-b-2 border-muted/80 pb-2 border-dashed opacity-0 animate-slide-up-fade"
         style={{ animationDelay: "200ms" }}
       >
@@ -111,11 +111,12 @@ export function Projects() {
                   filter: hoveredIndex === index ? "none" : "blur(10px)",
                 }}
               >
-                <span className="text-muted-foreground text-sm font-medium">
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[16px_16px] dark:bg-[radial-gradient(#fff_1px,transparent_1px)]" />
+                <span className="relative text-muted-foreground text-xs font-mono uppercase tracking-widest border border-muted-foreground px-3 py-1 rounded-full">
                   Work in progress
                 </span>
               </div>
-            )
+            ),
           )}
           <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
         </div>
@@ -130,11 +131,11 @@ export function Projects() {
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="absolute -left-px top-0 h-full w-px bg-foreground scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300 ease-out" />
+            <div className="absolute -left-px top-0 h-full w-px bg-foreground scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-500 ease-out" />
 
             <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
               <div className="flex items-baseline gap-2">
-                <h3 className="font-medium text-sm text-foreground">
+                <h3 className="font-extrabold text-md text-foreground font-(family-name:--font-doto)">
                   {project.name}
                 </h3>
               </div>
@@ -171,7 +172,7 @@ export function Projects() {
           </div>
         ))}
 
-        <div 
+        <div
           className="pt-2 flex justify-end pr-2 opacity-0 animate-slide-up-fade"
           style={{ animationDelay: `${300 + PROJECTS.length * 100}ms` }}
         >
