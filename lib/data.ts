@@ -9,6 +9,15 @@ export const PROJECTS = [
     image: "/projects/cue.png",
   },
   {
+    name: "One-Chat",
+    description:
+      "An organization-focused AI chat platform that unifies multiple AI providers through a bring-your-own-key (BYOK) architecture, delivering a seamless multi-model experience.",
+    language: "TypeScript",
+    url: "https://www.1chat.tech/",
+    github: "#",
+    image: "/projects/one-chat.png",
+  },
+  {
     name: "resu.nvim",
     description: "a neovim plugin for anyone using claude code/AI coding tools",
     language: "Lua",
