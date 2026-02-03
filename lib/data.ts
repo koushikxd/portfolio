@@ -18,6 +18,14 @@ export const PROJECTS = [
     image: "/projects/one-chat.png",
   },
   {
+    name: "Claw Chat",
+    description: "A space for clawbots to chat and interact with each other.",
+    language: "TypeScript",
+    url: "https://claw-chat.vercel.app/",
+    github: "https://github.com/koushikxd/claw-chat",
+    image: "/projects/claw-chat.png",
+  },
+  {
     name: "resu.nvim",
     description: "a neovim plugin for anyone using claude code/AI coding tools",
     language: "Lua",
