@@ -85,7 +85,7 @@ export function Projects() {
             "opacity 0.3s var(--ease-out-cubic), transform 0.3s var(--ease-out-cubic)",
         }}
       >
-        <div className="relative w-[280px] h-[180px] bg-secondary rounded-xl overflow-hidden">
+        <div className="relative w-[280px] h-[180px] border shadow-2xs bg-secondary rounded-xl overflow-hidden">
           {PROJECTS.map((project, index) =>
             project.image ? (
               <Image
