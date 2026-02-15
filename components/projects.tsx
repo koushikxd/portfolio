@@ -1,66 +1,99 @@
 "use client";
 
 import { PROJECTS } from "@/lib/data";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { ArrowRight, ScanEye } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 export function Projects() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [smoothPosition, setSmoothPosition] = useState({ x: 0, y: 0 });
-  const [isVisible, setIsVisible] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [useClickPreview, setUseClickPreview] = useState(false);
+  const mousePositionRef = useRef({ x: 0, y: 0 });
+  const smoothPositionRef = useRef({ x: 0, y: 0 });
+  const sectionRef = useRef<HTMLElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
+  const isVisible = activeIndex !== null;
 
   useEffect(() => {
-    const lerp = (start: number, end: number, factor: number) => {
-      return start + (end - start) * factor;
+    const mediaQuery = window.matchMedia(
+      "(max-width: 640px), (hover: none), (pointer: coarse)",
+    );
+    const update = () => {
+      setUseClickPreview(mediaQuery.matches);
     };
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
 
+  useEffect(() => {
+    if (!useClickPreview || activeIndex === null) return;
+    const handleOutsideClick = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target || sectionRef.current?.contains(target)) return;
+      setActiveIndex(null);
+    };
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [useClickPreview, activeIndex]);
+
+  useEffect(() => {
+    if (useClickPreview) {
+      if (previewRef.current) previewRef.current.style.transform = "";
+      return;
+    }
     const animate = () => {
-      setSmoothPosition((prev) => ({
-        x: lerp(prev.x, mousePosition.x, 0.15),
-        y: lerp(prev.y, mousePosition.y, 0.15),
-      }));
+      const nextX =
+        smoothPositionRef.current.x +
+        (mousePositionRef.current.x - smoothPositionRef.current.x) * 0.15;
+      const nextY =
+        smoothPositionRef.current.y +
+        (mousePositionRef.current.y - smoothPositionRef.current.y) * 0.15;
+      smoothPositionRef.current = { x: nextX, y: nextY };
+      if (previewRef.current) {
+        previewRef.current.style.transform = `translate3d(${nextX + 20}px, ${nextY - 100}px, 0)`;
+      }
       animationRef.current = requestAnimationFrame(animate);
     };
-
     animationRef.current = requestAnimationFrame(animate);
-
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [mousePosition]);
+  }, [useClickPreview]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      setMousePosition({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-    }
+    if (useClickPreview) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    mousePositionRef.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
   };
 
   const handleMouseEnter = (index: number) => {
-    setHoveredIndex(index);
-    setIsVisible(true);
+    if (useClickPreview) return;
+    setActiveIndex(index);
   };
 
   const handleMouseLeave = () => {
-    setHoveredIndex(null);
-    setIsVisible(false);
+    if (useClickPreview) return;
+    setActiveIndex(null);
+  };
+
+  const handlePreviewToggle = (index: number) => {
+    setActiveIndex((current) => (current === index ? null : index));
   };
 
   return (
     <section
-      ref={containerRef}
+      ref={sectionRef}
       onMouseMove={handleMouseMove}
-      className="space-y-4"
+      onClick={() => {
+        if (useClickPreview && activeIndex !== null) setActiveIndex(null);
+      }}
+      className="space-y-4 relative"
     >
       <div
         className="flex items-center justify-between border-b-2 border-muted/80 pb-2 border-dashed opacity-0 animate-slide-up-fade"
@@ -74,70 +107,122 @@ export function Projects() {
         </span>
       </div>
 
-      <div
-        className="pointer-events-none fixed z-50 overflow-hidden rounded-xl shadow-2xl will-change-transform"
-        style={{
-          left: containerRef.current?.getBoundingClientRect().left ?? 0,
-          top: containerRef.current?.getBoundingClientRect().top ?? 0,
-          transform: `translate3d(${smoothPosition.x + 20}px, ${smoothPosition.y - 100}px, 0) scale(${isVisible ? 1 : 0.95})`,
-          opacity: isVisible ? 1 : 0,
-          transition:
-            "opacity 0.3s var(--ease-out-cubic), transform 0.3s var(--ease-out-cubic)",
-        }}
-      >
-        <div className="relative w-[280px] h-[180px] border shadow-2xs bg-secondary rounded-xl overflow-hidden">
-          {PROJECTS.map((project, index) =>
-            project.image ? (
-              <Image
-                key={project.name}
-                src={project.image}
-                alt={project.name}
-                width={280}
-                height={180}
-                className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out"
-                style={{
-                  opacity: hoveredIndex === index ? 1 : 0,
-                  scale: hoveredIndex === index ? 1 : 1.1,
-                  filter: hoveredIndex === index ? "none" : "blur(10px)",
-                }}
-              />
-            ) : (
-              <div
-                key={project.name}
-                className="absolute inset-0 flex items-center justify-center bg-secondary transition-all duration-500 ease-out"
-                style={{
-                  opacity: hoveredIndex === index ? 1 : 0,
-                  scale: hoveredIndex === index ? 1 : 1.1,
-                  filter: hoveredIndex === index ? "none" : "blur(10px)",
-                }}
-              >
-                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[16px_16px] dark:bg-[radial-gradient(#fff_1px,transparent_1px)]" />
-                <span className="relative text-muted-foreground text-xs font-mono uppercase tracking-widest border border-muted-foreground px-3 py-1 rounded-full">
-                  Work in progress
-                </span>
-              </div>
-            ),
-          )}
-          <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
+      {!useClickPreview && (
+        <div
+          ref={previewRef}
+          className="pointer-events-none absolute left-0 top-0 z-50 overflow-hidden shadow-2xl will-change-transform"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            scale: isVisible ? 1 : 0.95,
+            transition:
+              "opacity 0.3s var(--ease-out-cubic), scale 0.3s var(--ease-out-cubic)",
+          }}
+        >
+          <div className="relative h-[180px] w-[280px] overflow-hidden border bg-secondary shadow-2xs">
+            {PROJECTS.map((project, index) =>
+              project.image ? (
+                <Image
+                  key={project.name}
+                  src={project.image}
+                  alt={project.name}
+                  width={280}
+                  height={180}
+                  className="absolute inset-0 h-full w-full object-cover transition-all duration-500 ease-out"
+                  style={{
+                    opacity: activeIndex === index ? 1 : 0,
+                    scale: activeIndex === index ? 1 : 1.1,
+                    filter: activeIndex === index ? "none" : "blur(10px)",
+                  }}
+                />
+              ) : (
+                <div
+                  key={project.name}
+                  className="absolute inset-0 flex items-center justify-center bg-secondary transition-all duration-500 ease-out"
+                  style={{
+                    opacity: activeIndex === index ? 1 : 0,
+                    scale: activeIndex === index ? 1 : 1.1,
+                    filter: activeIndex === index ? "none" : "blur(10px)",
+                  }}
+                >
+                  <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[16px_16px] dark:bg-[radial-gradient(#fff_1px,transparent_1px)]" />
+                  <span className="relative rounded-full border border-muted-foreground px-3 py-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                    Work in progress
+                  </span>
+                </div>
+              ),
+            )}
+            <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex flex-col gap-6">
         {PROJECTS.map((project, index) => (
           <div
             key={project.name}
-            className="group flex flex-col gap-2 relative pl-2 border-l border-transparent hover:border-foreground transition-all duration-300 opacity-0 animate-slide-up-fade active:scale-[0.99]"
+            className={`group flex flex-col gap-2 relative pl-2 border-l transition-all duration-300 opacity-0 animate-slide-up-fade active:scale-[0.99] ${
+              useClickPreview && isVisible && activeIndex === index
+                ? "border-foreground"
+                : "border-transparent hover:border-foreground"
+            }`}
             style={{ animationDelay: `${300 + index * 100}ms` }}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="absolute -left-px top-0 h-full w-px bg-foreground scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-500 ease-out" />
+            <div
+              className={`absolute -left-px top-0 h-full w-px bg-foreground transition-transform origin-top duration-500 ease-out ${
+                useClickPreview && isVisible && activeIndex === index
+                  ? "scale-y-100"
+                  : "scale-y-0 group-hover:scale-y-100"
+              }`}
+            />
 
             <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
-              <div className="flex items-baseline gap-2">
+              <div className="flex items-baseline gap-2 justify-between w-full sm:w-auto sm:justify-start">
                 <h3 className="font-extrabold text-md text-foreground font-(family-name:--font-doto)">
                   {project.name}
                 </h3>
+                <div className="relative">
+                  <button
+                    className={`${useClickPreview ? "inline-flex" : "hidden"} -mr-1 cursor-pointer p-1 transition-colors ${activeIndex === index && "bg-muted"} `}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePreviewToggle(index);
+                    }}
+                    aria-label="View project preview"
+                  >
+                    <ScanEye className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                  {useClickPreview && (
+                    <div
+                      className="pointer-events-none absolute right-[15px] top-[-68px] z-50 mr-3 -translate-y-1/2 overflow-hidden border bg-secondary shadow-2xl transition-all duration-300"
+                      style={{
+                        opacity: activeIndex === index ? 1 : 0,
+                        scale: activeIndex === index ? 1 : 0.95,
+                      }}
+                    >
+                      <div className="relative h-[180px] w-[280px] overflow-hidden">
+                        {project.image ? (
+                          <Image
+                            src={project.image}
+                            alt={project.name}
+                            width={280}
+                            height={180}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center bg-secondary">
+                            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[16px_16px] dark:bg-[radial-gradient(#fff_1px,transparent_1px)]" />
+                            <span className="relative rounded-full border border-muted-foreground px-3 py-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                              Work in progress
+                            </span>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <span className="text-xs text-muted-foreground font-mono pr-2">
