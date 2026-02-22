@@ -1,3 +1,12 @@
+export const EXPERIENCE = [
+  {
+    company: "Insigen Research",
+    role: "Software Development Engineer",
+    date: "2024 - Present",
+    description: "Building software.",
+  },
+];
+
 export const PROJECTS = [
   {
     name: "Cue",

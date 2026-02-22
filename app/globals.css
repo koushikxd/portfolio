@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.1448 0 0);
+  --background: oklch(0.96 0 0);
+  --foreground: oklch(0.12 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.1448 0 0);
   --popover: oklch(1 0 0);
@@ -14,13 +14,13 @@
   --primary-foreground: oklch(0.9851 0 0);
   --secondary: oklch(0.9702 0 0);
   --secondary-foreground: oklch(0.2046 0 0);
-  --muted: oklch(0.9702 0 0);
-  --muted-foreground: oklch(0.5486 0 0);
+  --muted: oklch(0.70 0 0);
+  --muted-foreground: oklch(0.40 0 0);
   --accent: oklch(0.9702 0 0);
   --accent-foreground: oklch(0.2046 0 0);
   --destructive: oklch(0.583 0.2387 28.4765);
   --destructive-foreground: oklch(0.9702 0 0);
-  --border: oklch(0.9219 0 0);
+  --border: oklch(0.65 0 0);
   --input: oklch(0.9219 0 0);
   --ring: oklch(0.709 0 0);
   --chart-1: oklch(0.5555 0 0);
@@ -181,16 +181,18 @@
   --transition-timing-function-ease-out-cubic: var(--ease-out-cubic);
   --transition-timing-function-ease-in-out-cubic: var(--ease-in-out-cubic);
 
-  --animate-fade-in: fade-in 300ms var(--ease-out-quad) forwards;
-  --animate-slide-up: slide-up 400ms var(--ease-out-cubic) forwards;
-  --animate-slide-up-fade: slide-up-fade 400ms var(--ease-out-cubic) forwards;
+  --animate-fade-in: fade-in 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-up: slide-up 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-up-fade: slide-up-fade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   @keyframes fade-in {
     from {
       opacity: 0;
+      filter: blur(8px);
     }
     to {
       opacity: 1;
+      filter: blur(0px);
     }
   }
 
@@ -207,10 +209,12 @@
     from {
       opacity: 0;
       transform: translateY(10px);
+      filter: blur(8px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
+      filter: blur(0px);
     }
   }
 }
@@ -219,7 +223,7 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
+  html, body {
     @apply bg-background text-foreground;
   }
 }

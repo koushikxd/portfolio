@@ -1,12 +1,8 @@
+import { ThemeProvider } from "@/components/theme-provider";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import type { Metadata } from "next";
-import { Doto } from "next/font/google";
+import { GeistPixelGrid } from "geist/font/pixel";
 import "./globals.css";
-
-const doto = Doto({
-  subsets: ["latin"],
-  variable: "--font-doto",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Koushik - Portfolio",
@@ -56,8 +52,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${doto.variable}`}>
-      <body className="antialiased">{children}</body>
+    <html lang="en" suppressHydrationWarning className={GeistPixelGrid.variable}>
+      <body className="antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          disableTransitionOnChange
+        >
+          <SmoothScroll>{children}</SmoothScroll>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

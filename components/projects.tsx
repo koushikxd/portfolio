@@ -100,7 +100,7 @@ export function Projects() {
         style={{ animationDelay: "200ms" }}
       >
         <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-          01 // Projects
+          03 // Projects
         </h2>
         <span className="text-xs text-muted-foreground">
           {PROJECTS.length} ITEMS
@@ -177,9 +177,9 @@ export function Projects() {
               }`}
             />
 
-            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4 transition-transform duration-300 ease-out group-hover:translate-x-1">
               <div className="flex items-baseline gap-2 justify-between w-full sm:w-auto sm:justify-start">
-                <h3 className="font-extrabold text-md text-foreground font-(family-name:--font-doto)">
+                <h3 className="font-extrabold text-md text-foreground font-(family-name:--font-geist-pixel-grid)">
                   {project.name}
                 </h3>
                 <div className="relative">
@@ -230,11 +230,11 @@ export function Projects() {
               </span>
             </div>
 
-            <p className="text-xs text-muted-foreground leading-relaxed max-w-lg">
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-lg transition-transform duration-300 ease-out group-hover:translate-x-1">
               {project.description}
             </p>
 
-            <div className="flex gap-4 text-[10px] uppercase tracking-wider font-medium">
+            <div className="flex gap-4 text-[10px] uppercase tracking-wider font-medium transition-transform duration-300 ease-out group-hover:translate-x-1">
               {project.github && (
                 <Link
                   href={project.github}
