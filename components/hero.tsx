@@ -20,7 +20,7 @@ export function Hero() {
           className="flex flex-col gap-2 text-sm text-muted-foreground max-w-xl leading-relaxed pl-0 opacity-0 animate-slide-up-fade"
           style={{ animationDelay: "300ms" }}
         >
-          <p>{"-"} SDE @ Insigen Research</p>
+          <p>{"-"} SDE @ Callensights</p>
           <p>
             {"-"} I build software. I prefer dark mode, minimalist interfaces,
             and doing most of my work in the terminal
