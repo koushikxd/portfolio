@@ -43,29 +43,13 @@ export const PROJECTS = [
     image: "/projects/resu.png",
   },
   {
-    name: "dash-cli",
+    name: "dash-git",
     description:
       "AI-powered Git CLI tool to generate commit messages, create PRs, manage issues all from your terminal.",
     language: "TypeScript",
     url: "https://dash-cli.vercel.app/",
-    github: "https://github.com/koushikxd/dash-cli",
+    github: "https://github.com/koushikxd/dash-git",
     image: "/projects/dash.png",
-  },
-  {
-    name: "send-cli",
-    description:
-      "Send is a cli tool to instantly share files, folders and links with mobile devices",
-    language: "TypeScript",
-    github: "https://github.com/koushikxd/send-cli",
-    image: "/projects/send.png",
-  },
-  {
-    name: "Clove",
-    description: "AI-powered open source contribution helper for beginners",
-    language: "TypeScript",
-    url: "#",
-    github: "https://github.com/koushikxd/clove",
-    image: "/projects/clove.png",
   },
   {
     name: "open-themes",
