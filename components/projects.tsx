@@ -1,10 +1,10 @@
 "use client";
 
-import { PROJECTS } from "@/lib/data";
 import { ArrowRight, ScanEye } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { PROJECTS } from "@/lib/data";
 
 export function Projects() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -18,7 +18,7 @@ export function Projects() {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(
-      "(max-width: 640px), (hover: none), (pointer: coarse)",
+      "(max-width: 640px), (hover: none), (pointer: coarse)"
     );
     const update = () => {
       setUseClickPreview(mediaQuery.matches);
@@ -87,6 +87,8 @@ export function Projects() {
   };
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: section dismisses preview overlay on tap; keyboard users dismiss via Escape handled at document level
+    // biome-ignore lint/a11y/useKeyWithClickEvents: see above
     <section
       ref={sectionRef}
       onMouseMove={handleMouseMove}
@@ -100,7 +102,7 @@ export function Projects() {
         style={{ animationDelay: "200ms" }}
       >
         <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-          03 // Projects
+          03 {"//"} Projects
         </h2>
         <span className="text-xs text-muted-foreground">
           {PROJECTS.length} ITEMS
@@ -149,7 +151,7 @@ export function Projects() {
                     Work in progress
                   </span>
                 </div>
-              ),
+              )
             )}
             <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
           </div>
@@ -158,6 +160,7 @@ export function Projects() {
 
       <div className="flex flex-col gap-6">
         {PROJECTS.map((project, index) => (
+          // biome-ignore lint/a11y/noStaticElementInteractions: hover-only preview affordance; click-preview path uses an explicit <button> below
           <div
             key={project.name}
             className={`group flex flex-col gap-2 relative pl-2 border-l transition-all duration-300 opacity-0 animate-slide-up-fade active:scale-[0.99] ${
@@ -184,6 +187,7 @@ export function Projects() {
                 </h3>
                 <div className="relative">
                   <button
+                    type="button"
                     className={`${useClickPreview ? "inline-flex" : "hidden"} -mr-1 cursor-pointer p-1 transition-colors ${activeIndex === index && "bg-muted"} `}
                     onClick={(e) => {
                       e.stopPropagation();

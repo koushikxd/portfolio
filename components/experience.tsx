@@ -8,7 +8,7 @@ export function Experience() {
         style={{ animationDelay: "200ms" }}
       >
         <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-          02 // Experience
+          02 {"//"} Experience
         </h2>
         <span className="text-xs text-muted-foreground">
           {EXPERIENCE.length} ROLES

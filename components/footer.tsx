@@ -1,5 +1,5 @@
-import { SOCIALS } from "@/lib/data";
 import Link from "next/link";
+import { SOCIALS } from "@/lib/data";
 import { VisitorCount } from "./visitor-count";
 
 export function Footer() {

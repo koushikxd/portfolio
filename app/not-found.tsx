@@ -14,14 +14,16 @@ export default function NotFound() {
             Page Not Found
           </p>
         </div>
-        
+
         <div className="w-12 h-px bg-muted/60" />
-        
-        <Link 
-          href="/" 
+
+        <Link
+          href="/"
           className="group flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
         >
-          <span className="group-hover:-translate-x-1 transition-transform">←</span>
+          <span className="group-hover:-translate-x-1 transition-transform">
+            ←
+          </span>
           <span>Return Home</span>
         </Link>
       </div>

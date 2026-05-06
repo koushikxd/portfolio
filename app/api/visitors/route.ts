@@ -1,5 +1,5 @@
+import { type NextRequest, NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
-import { NextRequest, NextResponse } from "next/server";
 
 const VISITOR_KEY = "portfolio:visitors";
 

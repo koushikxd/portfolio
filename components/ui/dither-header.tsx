@@ -1,17 +1,18 @@
 "use client";
 
-import { useState, Suspense, lazy, useCallback, useEffect } from "react";
 import { useTheme } from "next-themes";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+// import { MetalFx } from "metal-fx";
 import { cn } from "@/lib/utils";
 
 const Dithering = lazy(() =>
   import("@paper-design/shaders-react").then((mod) => ({
     default: mod.Dithering,
-  })),
+  }))
 );
 
 const useThemeToggle = () => {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -111,10 +112,11 @@ export function DitherHeader() {
       className="w-full flex justify-start items-center mb-8 opacity-0 animate-slide-up-fade"
       style={{ animationDelay: "0ms" }}
     >
+      {/* <MetalFx preset="silver" strength={1} style={{ width: "200%" }}> */}
       <div
         className={cn(
           "relative w-full h-24 md:h-32 overflow-hidden border border-border bg-card shadow-sm duration-500",
-          "cursor-pointer active:scale-[0.98] transition-transform",
+          "cursor-pointer active:scale-[0.98] transition-transform"
         )}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -138,6 +140,7 @@ export function DitherHeader() {
           </div>
         </Suspense>
       </div>
+      {/* </MetalFx> */}
     </div>
   );
 }

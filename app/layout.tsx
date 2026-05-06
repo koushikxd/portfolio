@@ -1,7 +1,7 @@
-import { ThemeProvider } from "@/components/theme-provider";
-import { SmoothScroll } from "@/components/smooth-scroll";
-import type { Metadata } from "next";
 import { GeistPixelGrid } from "geist/font/pixel";
+import type { Metadata } from "next";
+import { SmoothScroll } from "@/components/smooth-scroll";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -52,8 +52,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={GeistPixelGrid.variable}>
-      <body className="antialiased">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={GeistPixelGrid.variable}
+    >
+      <body suppressHydrationWarning className="antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
