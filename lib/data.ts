@@ -1,6 +1,6 @@
 export const EXPERIENCE = [
   {
-    company: "Steps AI",
+    company: "Callensights",
     role: "Software Development Engineer",
     date: "2024 - Present",
     description: "Building software.",
