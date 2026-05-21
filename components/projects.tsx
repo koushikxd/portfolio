@@ -97,18 +97,6 @@ export function Projects() {
       }}
       className="space-y-4 relative"
     >
-      <div
-        className="flex items-center justify-between border-b-2 border-muted/80 pb-2 border-dashed opacity-0 animate-slide-up-fade"
-        style={{ animationDelay: "200ms" }}
-      >
-        <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-          03 {"//"} Projects
-        </h2>
-        <span className="text-xs text-muted-foreground">
-          {PROJECTS.length} ITEMS
-        </span>
-      </div>
-
       {!useClickPreview && (
         <div
           ref={previewRef}
@@ -168,7 +156,7 @@ export function Projects() {
                 ? "border-foreground"
                 : "border-transparent hover:border-foreground"
             }`}
-            style={{ animationDelay: `${300 + index * 100}ms` }}
+            style={{ animationDelay: `${100 + index * 100}ms` }}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >
@@ -263,7 +251,7 @@ export function Projects() {
 
         <div
           className="pt-2 flex justify-end pr-2 opacity-0 animate-slide-up-fade"
-          style={{ animationDelay: `${300 + PROJECTS.length * 100}ms` }}
+          style={{ animationDelay: `${100 + PROJECTS.length * 100}ms` }}
         >
           <Link
             href="https://github.com/koushikxd?tab=repositories"

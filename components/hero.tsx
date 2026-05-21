@@ -7,7 +7,7 @@ export function Hero() {
           style={{ animationDelay: "150ms" }}
         >
           <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            01 {"//"} About
+            00 {"//"} About
           </h2>
         </div>
         <h1

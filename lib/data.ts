@@ -1,9 +1,23 @@
 export const EXPERIENCE = [
   {
-    company: "Callensights",
-    role: "Software Development Engineer",
-    date: "2024 - Present",
-    description: "Building software.",
+    company: "Steps AI",
+    role: "Software Developer Engineer",
+    date: "Mar 2026 - Present",
+    description: "Currently working here.",
+  },
+  {
+    company: "Techintelli Solutions (Callensights)",
+    role: "Software Developer Engineer",
+    date: "Mar 2025 - Mar 2026",
+    description:
+      "Built an AI-powered ATS platform (Callensights) and an AI student companion app from the ground up.",
+  },
+  {
+    company: "Vertocity",
+    role: "Software Engineer Intern",
+    date: "Mar 2024 - Feb 2025",
+    description:
+      "Joined as an Intern and later worked as Founding engineer who built the frontend infrastructure from scratch.",
   },
 ];
 
@@ -50,14 +64,6 @@ export const PROJECTS = [
     url: "https://dash-cli.vercel.app/",
     github: "https://github.com/koushikxd/dash-git",
     image: "/projects/dash.png",
-  },
-  {
-    name: "open-themes",
-    description:
-      "An experimental extension to extract themes from websites using tailwind css",
-    language: "TypeScript",
-    url: "#",
-    github: "https://github.com/koushikxd/open-themes",
   },
 ];
 
