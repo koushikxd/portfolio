@@ -146,29 +146,26 @@ export function Projects() {
         </div>
       )}
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6" data-dim-group>
         {PROJECTS.map((project, index) => (
           // biome-ignore lint/a11y/noStaticElementInteractions: hover-only preview affordance; click-preview path uses an explicit <button> below
           <div
             key={project.name}
-            className={`group flex flex-col gap-2 relative pl-2 border-l transition-all duration-300 opacity-0 animate-slide-up-fade active:scale-[0.99] ${
-              useClickPreview && isVisible && activeIndex === index
-                ? "border-foreground"
-                : "border-transparent hover:border-foreground"
-            }`}
+            data-dim-item
+            className="group flex flex-col gap-2 relative pl-2 border-l border-transparent cursor-default select-none opacity-0 animate-slide-up-fade active:scale-[0.99]"
             style={{ animationDelay: `${100 + index * 100}ms` }}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >
             <div
-              className={`absolute -left-px top-0 h-full w-px bg-foreground transition-transform origin-top duration-500 ease-out ${
+              className={`absolute -left-px top-0 h-full w-px bg-foreground transition-transform origin-top duration-300 ease-[var(--ease-out-cubic)] ${
                 useClickPreview && isVisible && activeIndex === index
                   ? "scale-y-100"
                   : "scale-y-0 group-hover:scale-y-100"
               }`}
             />
 
-            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4 transition-transform duration-300 ease-out group-hover:translate-x-1">
+            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4 group-hover:translate-x-1">
               <div className="flex items-baseline gap-2 justify-between w-full sm:w-auto sm:justify-start">
                 <h3 className="font-extrabold text-md text-foreground font-(family-name:--font-geist-pixel-grid)">
                   {project.name}
@@ -222,16 +219,16 @@ export function Projects() {
               </span>
             </div>
 
-            <p className="text-xs text-muted-foreground leading-relaxed max-w-lg transition-transform duration-300 ease-out group-hover:translate-x-1">
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-lg group-hover:translate-x-1">
               {project.description}
             </p>
 
-            <div className="flex gap-4 text-[10px] uppercase tracking-wider font-medium transition-transform duration-300 ease-out group-hover:translate-x-1">
+            <div className="flex gap-4 text-[10px] uppercase tracking-wider font-medium group-hover:translate-x-1">
               {project.github && (
                 <Link
                   href={project.github}
                   target="_blank"
-                  className="hover:text-foreground hover:underline decoration-dotted underline-offset-4 transition-colors"
+                  className="cursor-pointer hover:text-foreground hover:underline decoration-dotted underline-offset-4 transition-colors"
                 >
                   Source
                 </Link>
@@ -240,7 +237,7 @@ export function Projects() {
                 <Link
                   href={project.url}
                   target="_blank"
-                  className="hover:text-foreground hover:underline decoration-dotted underline-offset-4 transition-colors"
+                  className="cursor-pointer hover:text-foreground hover:underline decoration-dotted underline-offset-4 transition-colors"
                 >
                   Deployment
                 </Link>

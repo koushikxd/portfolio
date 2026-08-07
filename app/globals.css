@@ -229,3 +229,28 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hovering one item in a [data-dim-group] fades its siblings and nudges the
+   hovered one. Targets the item's children because the entrance animation
+   (forwards fill) pins opacity and transform on the item itself.
+   Dim goes faster than restore so the fade answers intent but releases gently. */
+@media (hover: hover) and (pointer: fine) {
+  [data-dim-item] > * {
+    /* translate and scale are separate properties in Tailwind v4, not transform */
+    transition:
+      opacity 400ms ease,
+      translate 300ms var(--ease-out-cubic),
+      scale 300ms var(--ease-out-cubic);
+  }
+
+  [data-dim-group]:has([data-dim-item]:hover) [data-dim-item]:not(:hover) > * {
+    opacity: 0.35;
+    transition-duration: 250ms, 300ms, 300ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-dim-item] > * {
+    transition: none;
+  }
+}
