@@ -23,6 +23,14 @@ export const EXPERIENCE = [
 
 export const PROJECTS = [
   {
+    name: "Maple",
+    description:
+      "AI-driven performance analysis and regression detection for k6, prometheus etc",
+    language: "TypeScript, Rust",
+    github: "https://github.com/koushikxd/Maple",
+    image: "/projects/maple.png",
+  },
+  {
     name: "Cue",
     description:
       "A minimalist AI-powered task manager that intuitively processes natural language to organize your day. Simply type what you need, and let AI handle the rest.",
@@ -41,29 +49,12 @@ export const PROJECTS = [
     image: "/projects/one-chat.png",
   },
   {
-    name: "Claw Chat",
-    description: "A space for clawbots to chat and interact with each other.",
-    language: "TypeScript",
-    url: "https://claw-chat.vercel.app/",
-    github: "https://github.com/koushikxd/claw-chat",
-    image: "/projects/claw-chat.png",
-  },
-  {
     name: "resu.nvim",
     description: "a neovim plugin for anyone using claude code/AI coding tools",
     language: "Lua",
     url: "#",
     github: "https://github.com/koushikxd/resu.nvim",
     image: "/projects/resu.png",
-  },
-  {
-    name: "dash-git",
-    description:
-      "AI-powered Git CLI tool to generate commit messages, create PRs, manage issues all from your terminal.",
-    language: "TypeScript",
-    url: "https://dash-cli.vercel.app/",
-    github: "https://github.com/koushikxd/dash-git",
-    image: "/projects/dash.png",
   },
 ];
 
