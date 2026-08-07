@@ -39,7 +39,7 @@ export function TabsSection() {
         className="flex items-center justify-between border-b-2 border-muted/80 pb-2 border-dashed opacity-0 animate-slide-up-fade"
         style={{ animationDelay: "200ms" }}
       >
-        <div className="flex gap-3 sm:gap-4">
+        <div className="flex gap-1.5 sm:gap-2">
           {TABS.map((tab, i) => {
             const isActive = active === tab.id;
             return (
