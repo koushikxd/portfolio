@@ -10,7 +10,6 @@ export function Footer() {
     >
       <div className="container max-w-2xl mx-auto flex h-10 items-center justify-between font-mono text-xs px-5">
         <div className="text-muted-foreground flex items-center">
-          <span className="text-primary mr-1">~</span>
           <VisitorCount />
         </div>
 
