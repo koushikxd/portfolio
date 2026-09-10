@@ -23,6 +23,14 @@ export const EXPERIENCE = [
 
 export const PROJECTS = [
   {
+    name: "Relay",
+    description:
+      "Multiplayer AI for IT companies. One agent works privately with each employee and with the whole team in Slack, carrying the right memory, files, and permissions into every room.",
+    language: "TypeScript",
+    url: "https://relayy-ai.vercel.app/",
+    image: "/projects/relay.png",
+  },
+  {
     name: "Maple",
     description:
       "AI-driven performance analysis and regression detection for k6, prometheus etc",
@@ -38,15 +46,6 @@ export const PROJECTS = [
     url: "https://www.cuedot.tech/home",
     github: "https://github.com/koushikxd/Cue",
     image: "/projects/cue.png",
-  },
-  {
-    name: "One-Chat",
-    description:
-      "An organization-focused AI chat platform that unifies multiple AI providers through a bring-your-own-key (BYOK) architecture, delivering a seamless multi-model experience.",
-    language: "TypeScript",
-    url: "https://www.1chat.tech/",
-    github: "#",
-    image: "/projects/one-chat.png",
   },
   {
     name: "resu.nvim",

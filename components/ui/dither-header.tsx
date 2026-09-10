@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const Dithering = lazy(() =>
   import("@paper-design/shaders-react").then((mod) => ({
     default: mod.Dithering,
-  }))
+  })),
 );
 
 const useThemeToggle = () => {
@@ -116,7 +116,7 @@ export function DitherHeader() {
       <div
         className={cn(
           "relative w-full h-24 md:h-32 overflow-hidden border border-border bg-card shadow-sm duration-500",
-          "cursor-pointer active:scale-[0.98] transition-transform"
+          "cursor-pointer active:scale-[0.98] transition-transform",
         )}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
