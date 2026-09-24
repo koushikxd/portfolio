@@ -14,7 +14,7 @@ export const EXPERIENCE = [
   },
   {
     company: "Vertocity",
-    role: "Software Engineer Intern",
+    role: "Founding Engineer",
     date: "Mar 2024 - Feb 2025",
     description:
       "Joined as an Intern and later worked as Founding engineer who built the frontend infrastructure from scratch.",
