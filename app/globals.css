@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+/* Viewports tall and wide enough to fit the page on one screen; below this the page scrolls normally */
+@custom-variant fit (@media (min-width: 40rem) and (min-height: 700px));
 
 :root {
   --background: oklch(0.96 0 0);

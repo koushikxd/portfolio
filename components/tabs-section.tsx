@@ -34,13 +34,13 @@ export function TabsSection() {
   }, []);
 
   return (
-    <section className="space-y-4 relative">
+    <section className="space-y-4 relative flex-1 min-h-0 flex flex-col">
       <div
         className="flex items-center justify-between border-b-2 border-muted/80 pb-2 border-dashed opacity-0 animate-slide-up-fade"
         style={{ animationDelay: "200ms" }}
       >
         <div className="flex gap-1.5 sm:gap-2">
-          {TABS.map((tab, i) => {
+          {TABS.map((tab) => {
             const isActive = active === tab.id;
             return (
               <button
@@ -64,7 +64,12 @@ export function TabsSection() {
         </span>
       </div>
 
-      <div key={active} className="opacity-0 animate-slide-up-fade">
+      {/* Horizontal padding keeps the hover bar and nudge from being clipped by the scroll container */}
+      <div
+        key={active}
+        data-lenis-prevent
+        className="flex-1 min-h-0 fit:overflow-y-auto fit:overflow-x-hidden fit:-mx-2 fit:px-2 opacity-0 animate-slide-up-fade"
+      >
         {active === "experience" ? <Experience /> : <Projects />}
       </div>
     </section>

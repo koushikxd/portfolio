@@ -4,6 +4,7 @@ import { ArrowRight, ScanEye } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { PROJECTS } from "@/lib/data";
 
 export function Projects() {
@@ -65,11 +66,7 @@ export function Projects() {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (useClickPreview) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    mousePositionRef.current = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    };
+    mousePositionRef.current = { x: e.clientX, y: e.clientY };
   };
 
   const handleMouseEnter = (index: number) => {
@@ -97,54 +94,57 @@ export function Projects() {
       }}
       className="space-y-4 relative"
     >
-      {!useClickPreview && (
-        <div
-          ref={previewRef}
-          className="pointer-events-none absolute left-0 top-0 z-50 overflow-hidden shadow-2xl will-change-transform"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            scale: isVisible ? 1 : 0.95,
-            transition:
-              "opacity 0.3s var(--ease-out-cubic), scale 0.3s var(--ease-out-cubic)",
-          }}
-        >
-          <div className="relative h-[180px] w-[280px] overflow-hidden border bg-secondary shadow-2xs">
-            {PROJECTS.map((project, index) =>
-              project.image ? (
-                <Image
-                  key={project.name}
-                  src={project.image}
-                  alt={project.name}
-                  width={280}
-                  height={180}
-                  className="absolute inset-0 h-full w-full object-cover transition-all duration-500 ease-out"
-                  style={{
-                    opacity: activeIndex === index ? 1 : 0,
-                    scale: activeIndex === index ? 1 : 1.1,
-                    filter: activeIndex === index ? "none" : "blur(10px)",
-                  }}
-                />
-              ) : (
-                <div
-                  key={project.name}
-                  className="absolute inset-0 flex items-center justify-center bg-secondary transition-all duration-500 ease-out"
-                  style={{
-                    opacity: activeIndex === index ? 1 : 0,
-                    scale: activeIndex === index ? 1 : 1.1,
-                    filter: activeIndex === index ? "none" : "blur(10px)",
-                  }}
-                >
-                  <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[16px_16px] dark:bg-[radial-gradient(#fff_1px,transparent_1px)]" />
-                  <span className="relative rounded-full border border-muted-foreground px-3 py-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                    Work in progress
-                  </span>
-                </div>
-              )
-            )}
-            <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
-          </div>
-        </div>
-      )}
+      {/* Portaled so the tab panel's scroll container doesn't clip it */}
+      {!useClickPreview &&
+        createPortal(
+          <div
+            ref={previewRef}
+            className="pointer-events-none fixed left-0 top-0 z-50 overflow-hidden shadow-2xl will-change-transform"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              scale: isVisible ? 1 : 0.95,
+              transition:
+                "opacity 0.3s var(--ease-out-cubic), scale 0.3s var(--ease-out-cubic)",
+            }}
+          >
+            <div className="relative h-[180px] w-[280px] overflow-hidden border bg-secondary shadow-2xs">
+              {PROJECTS.map((project, index) =>
+                project.image ? (
+                  <Image
+                    key={project.name}
+                    src={project.image}
+                    alt={project.name}
+                    width={280}
+                    height={180}
+                    className="absolute inset-0 h-full w-full object-cover transition-all duration-500 ease-out"
+                    style={{
+                      opacity: activeIndex === index ? 1 : 0,
+                      scale: activeIndex === index ? 1 : 1.1,
+                      filter: activeIndex === index ? "none" : "blur(10px)",
+                    }}
+                  />
+                ) : (
+                  <div
+                    key={project.name}
+                    className="absolute inset-0 flex items-center justify-center bg-secondary transition-all duration-500 ease-out"
+                    style={{
+                      opacity: activeIndex === index ? 1 : 0,
+                      scale: activeIndex === index ? 1 : 1.1,
+                      filter: activeIndex === index ? "none" : "blur(10px)",
+                    }}
+                  >
+                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[16px_16px] dark:bg-[radial-gradient(#fff_1px,transparent_1px)]" />
+                    <span className="relative rounded-full border border-muted-foreground px-3 py-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                      Work in progress
+                    </span>
+                  </div>
+                )
+              )}
+              <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
+            </div>
+          </div>,
+          document.body
+        )}
 
       <div className="flex flex-col gap-6" data-dim-group>
         {PROJECTS.map((project, index) => (
