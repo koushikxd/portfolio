@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Background } from "@/components/background";
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen font-mono selection:bg-foreground selection:text-background relative flex items-center justify-center">
-      <Background />
+    <main className="min-h-dvh font-mono relative flex items-center justify-center">
+      <div className="fixed inset-0 -z-10 bg-background">
+        <div className="absolute size-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff1a_1px,transparent_1px)] bg-size-[16px_16px] mask-[radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+      </div>
       <div className="relative z-10 flex flex-col items-center gap-6 text-center px-6">
         <div className="space-y-2">
           <h1 className="text-4xl font-medium tracking-tighter text-foreground">

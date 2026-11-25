@@ -1,7 +1,10 @@
+import { GeistMono } from "geist/font/mono";
 import { GeistPixelGrid } from "geist/font/pixel";
+import { GeistSans } from "geist/font/sans";
+import { ReactLenis } from "lenis/react";
 import type { Metadata } from "next";
-import { SmoothScroll } from "@/components/smooth-scroll";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "next-themes";
+import { HANDLES } from "@/lib/data";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,8 +24,6 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    title: "Koushik - Portfolio",
-    description: "literally my portfolio, that's it",
     siteName: "Koushik",
     images: [
       {
@@ -35,14 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Koushik - Portfolio",
-    description: "literally my portfolio, that's it",
-    creator: "@koushik_xd",
-    images: ["/og.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
+    creator: `@${HANDLES.x}`,
   },
 };
 
@@ -55,15 +49,20 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={GeistPixelGrid.variable}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${GeistPixelGrid.variable}`}
     >
-      <body suppressHydrationWarning className="antialiased">
+      <body
+        suppressHydrationWarning
+        className="antialiased selection:bg-foreground selection:text-background"
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           disableTransitionOnChange
         >
-          <SmoothScroll>{children}</SmoothScroll>
+          <ReactLenis root options={{ duration: 0.8 }}>
+            {children}
+          </ReactLenis>
         </ThemeProvider>
       </body>
     </html>
