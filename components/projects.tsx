@@ -1,265 +1,183 @@
 "use client";
 
-import { ArrowRight, ScanEye } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { PROJECTS } from "@/lib/data";
+import { Section } from "@/components/section";
+import { TextLink } from "@/components/text-link";
+import { useMountEffect } from "@/hooks/use-mount-effect";
+import { PROJECTS, SOCIALS } from "@/lib/data";
 
-export function Projects() {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [useClickPreview, setUseClickPreview] = useState(false);
-  const mousePositionRef = useRef({ x: 0, y: 0 });
-  const smoothPositionRef = useRef({ x: 0, y: 0 });
-  const sectionRef = useRef<HTMLElement>(null);
+const PREVIEW_TILTS = [-1.5, 1.5, -1];
+
+const TORN_EDGE =
+  "polygon(1% 2%, 12% 0.5%, 25% 1.5%, 38% 0%, 54% 1%, 69% 0.5%, 83% 1.5%, 98% 0%, 99% 14%, 98.5% 31%, 100% 48%, 99% 65%, 99.5% 82%, 98% 99%, 84% 98%, 70% 100%, 55% 98.5%, 40% 99.5%, 25% 98%, 11% 99.5%, 0% 98%, 1% 82%, 0% 65%, 1.5% 48%, 0.5% 31%, 1% 15%)";
+
+const HOVER_QUERY = "(hover: hover) and (pointer: fine)";
+
+function subscribeToHover(onChange: () => void) {
+  const mediaQuery = window.matchMedia(HOVER_QUERY);
+  mediaQuery.addEventListener("change", onChange);
+  return () => mediaQuery.removeEventListener("change", onChange);
+}
+
+const getCanHover = () => window.matchMedia(HOVER_QUERY).matches;
+// False on the server so SSR and hydration skip the portaled preview
+const getServerCanHover = () => false;
+
+function ProjectPreview({
+  isVisible,
+  previewIndex,
+}: {
+  isVisible: boolean;
+  previewIndex: number;
+}) {
   const previewRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
-  const isVisible = activeIndex !== null;
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia(
-      "(max-width: 640px), (hover: none), (pointer: coarse)"
-    );
-    const update = () => {
-      setUseClickPreview(mediaQuery.matches);
-    };
-    update();
-    mediaQuery.addEventListener("change", update);
-    return () => mediaQuery.removeEventListener("change", update);
-  }, []);
+  useMountEffect(() => {
+    const mouse = { x: 0, y: 0 };
+    const smooth = { x: 0, y: 0 };
+    let frame = 0;
 
-  useEffect(() => {
-    if (!useClickPreview || activeIndex === null) return;
-    const handleOutsideClick = (event: MouseEvent) => {
-      const target = event.target as Node | null;
-      if (!target || sectionRef.current?.contains(target)) return;
-      setActiveIndex(null);
-    };
-    document.addEventListener("click", handleOutsideClick);
-    return () => document.removeEventListener("click", handleOutsideClick);
-  }, [useClickPreview, activeIndex]);
-
-  useEffect(() => {
-    if (useClickPreview) {
-      if (previewRef.current) previewRef.current.style.transform = "";
-      return;
-    }
+    // Lerps toward the cursor and stops once settled; the next mousemove restarts it,
+    // so the card keeps tracking while hidden and never jumps when it reappears
     const animate = () => {
-      const nextX =
-        smoothPositionRef.current.x +
-        (mousePositionRef.current.x - smoothPositionRef.current.x) * 0.15;
-      const nextY =
-        smoothPositionRef.current.y +
-        (mousePositionRef.current.y - smoothPositionRef.current.y) * 0.15;
-      smoothPositionRef.current = { x: nextX, y: nextY };
-      if (previewRef.current) {
-        previewRef.current.style.transform = `translate3d(${nextX + 20}px, ${nextY - 100}px, 0)`;
+      smooth.x += (mouse.x - smooth.x) * 0.15;
+      smooth.y += (mouse.y - smooth.y) * 0.15;
+      const settled =
+        Math.abs(mouse.x - smooth.x) < 0.1 &&
+        Math.abs(mouse.y - smooth.y) < 0.1;
+      if (settled) {
+        smooth.x = mouse.x;
+        smooth.y = mouse.y;
       }
-      animationRef.current = requestAnimationFrame(animate);
+      if (previewRef.current) {
+        previewRef.current.style.transform = `translate3d(${smooth.x + 20}px, ${smooth.y - 120}px, 0)`;
+      }
+      frame = settled ? 0 : requestAnimationFrame(animate);
     };
-    animationRef.current = requestAnimationFrame(animate);
+
+    const onMove = (e: MouseEvent) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      if (!frame) frame = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("mousemove", onMove);
+    frame = requestAnimationFrame(animate);
     return () => {
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(frame);
     };
-  }, [useClickPreview]);
+  });
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (useClickPreview) return;
-    mousePositionRef.current = { x: e.clientX, y: e.clientY };
-  };
-
-  const handleMouseEnter = (index: number) => {
-    if (useClickPreview) return;
-    setActiveIndex(index);
-  };
-
-  const handleMouseLeave = () => {
-    if (useClickPreview) return;
-    setActiveIndex(null);
-  };
-
-  const handlePreviewToggle = (index: number) => {
-    setActiveIndex((current) => (current === index ? null : index));
-  };
-
-  return (
-    // biome-ignore lint/a11y/noStaticElementInteractions: section dismisses preview overlay on tap; keyboard users dismiss via Escape handled at document level
-    // biome-ignore lint/a11y/useKeyWithClickEvents: see above
-    <section
-      ref={sectionRef}
-      onMouseMove={handleMouseMove}
-      onClick={() => {
-        if (useClickPreview && activeIndex !== null) setActiveIndex(null);
+  return createPortal(
+    <div
+      ref={previewRef}
+      className="pointer-events-none fixed left-0 top-0 z-50 w-[300px] will-change-transform"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        scale: isVisible ? 1 : 0.95,
+        transition:
+          "opacity 220ms var(--ease-out-smooth), scale 220ms var(--ease-out-smooth)",
       }}
-      className="space-y-4 relative"
     >
-      {/* Portaled so the tab panel's scroll container doesn't clip it */}
-      {!useClickPreview &&
-        createPortal(
-          <div
-            ref={previewRef}
-            className="pointer-events-none fixed left-0 top-0 z-50 overflow-hidden shadow-2xl will-change-transform"
-            style={{
-              opacity: isVisible ? 1 : 0,
-              scale: isVisible ? 1 : 0.95,
-              transition:
-                "opacity 0.3s var(--ease-out-cubic), scale 0.3s var(--ease-out-cubic)",
-            }}
-          >
-            <div className="relative h-[180px] w-[280px] overflow-hidden border bg-secondary shadow-2xs">
-              {PROJECTS.map((project, index) =>
-                project.image ? (
-                  <Image
-                    key={project.name}
-                    src={project.image}
-                    alt={project.name}
-                    width={280}
-                    height={180}
-                    className="absolute inset-0 h-full w-full object-cover transition-all duration-500 ease-out"
-                    style={{
-                      opacity: activeIndex === index ? 1 : 0,
-                      scale: activeIndex === index ? 1 : 1.1,
-                      filter: activeIndex === index ? "none" : "blur(10px)",
-                    }}
-                  />
-                ) : (
-                  <div
-                    key={project.name}
-                    className="absolute inset-0 flex items-center justify-center bg-secondary transition-all duration-500 ease-out"
-                    style={{
-                      opacity: activeIndex === index ? 1 : 0,
-                      scale: activeIndex === index ? 1 : 1.1,
-                      filter: activeIndex === index ? "none" : "blur(10px)",
-                    }}
-                  >
-                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[16px_16px] dark:bg-[radial-gradient(#fff_1px,transparent_1px)]" />
-                    <span className="relative rounded-full border border-muted-foreground px-3 py-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                      Work in progress
-                    </span>
-                  </div>
-                )
-              )}
-              <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
-            </div>
-          </div>,
-          document.body
-        )}
-
-      <div className="flex flex-col gap-6" data-dim-group>
-        {PROJECTS.map((project, index) => (
-          // biome-ignore lint/a11y/noStaticElementInteractions: hover-only preview affordance; click-preview path uses an explicit <button> below
-          <div
-            key={project.name}
-            data-dim-item
-            className="group flex flex-col gap-2 relative pl-2 border-l border-transparent cursor-default select-none opacity-0 animate-slide-up-fade active:scale-[0.99]"
-            style={{ animationDelay: `${100 + index * 100}ms` }}
-            onMouseEnter={() => handleMouseEnter(index)}
-            onMouseLeave={handleMouseLeave}
-          >
-            <div
-              className={`absolute -left-px top-0 h-full w-px bg-foreground transition-transform origin-top duration-300 ease-[var(--ease-out-cubic)] ${
-                useClickPreview && isVisible && activeIndex === index
-                  ? "scale-y-100"
-                  : "scale-y-0 group-hover:scale-y-100"
-              }`}
-            />
-
-            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4 group-hover:translate-x-1">
-              <div className="flex items-baseline gap-2 justify-between w-full sm:w-auto sm:justify-start">
-                <h3 className="font-extrabold text-md text-foreground font-(family-name:--font-geist-pixel-grid)">
-                  {project.name}
-                </h3>
-                <div className="relative">
-                  <button
-                    type="button"
-                    className={`${useClickPreview ? "inline-flex" : "hidden"} -mr-1 cursor-pointer p-1 transition-colors ${activeIndex === index && "bg-muted"} `}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePreviewToggle(index);
-                    }}
-                    aria-label="View project preview"
-                  >
-                    <ScanEye className="h-4 w-4 text-muted-foreground" />
-                  </button>
-                  {useClickPreview && (
-                    <div
-                      className="pointer-events-none absolute right-[15px] top-[-68px] z-50 mr-3 -translate-y-1/2 overflow-hidden border bg-secondary shadow-2xl transition-all duration-300"
-                      style={{
-                        opacity: activeIndex === index ? 1 : 0,
-                        scale: activeIndex === index ? 1 : 0.95,
-                      }}
-                    >
-                      <div className="relative h-[180px] w-[280px] overflow-hidden">
-                        {project.image ? (
-                          <Image
-                            src={project.image}
-                            alt={project.name}
-                            width={280}
-                            height={180}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <div className="absolute inset-0 flex items-center justify-center bg-secondary">
-                            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[16px_16px] dark:bg-[radial-gradient(#fff_1px,transparent_1px)]" />
-                            <span className="relative rounded-full border border-muted-foreground px-3 py-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                              Work in progress
-                            </span>
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <span className="text-xs text-muted-foreground font-mono pr-2">
-                [{project.language}]
-              </span>
-            </div>
-
-            <p className="text-xs text-muted-foreground leading-relaxed max-w-lg group-hover:translate-x-1">
-              {project.description}
-            </p>
-
-            <div className="flex gap-4 text-[10px] uppercase tracking-wider font-medium group-hover:translate-x-1">
-              {project.github && (
-                <Link
-                  href={project.github}
-                  target="_blank"
-                  className="cursor-pointer hover:text-foreground hover:underline decoration-dotted underline-offset-4 transition-colors"
-                >
-                  Source
-                </Link>
-              )}
-              {project.url && project.url !== "#" && (
-                <Link
-                  href={project.url}
-                  target="_blank"
-                  className="cursor-pointer hover:text-foreground hover:underline decoration-dotted underline-offset-4 transition-colors"
-                >
-                  Deployment
-                </Link>
-              )}
-            </div>
+      {/* Paper print: torn edge via clip-path, so the shadow lives on the parent filter */}
+      <div
+        className="transition-[rotate] duration-300 ease-out-smooth [filter:drop-shadow(0_0_1px_var(--border))_drop-shadow(2px_6px_10px_rgb(0_0_0/0.14))]"
+        style={{
+          rotate: `${PREVIEW_TILTS[previewIndex % PREVIEW_TILTS.length]}deg`,
+        }}
+      >
+        <div className="bg-card p-3" style={{ clipPath: TORN_EDGE }}>
+          <div className="relative aspect-[16/10] overflow-hidden bg-muted/40">
+            {PROJECTS.map((project, index) => (
+              <Image
+                key={project.name}
+                src={project.image}
+                alt=""
+                fill
+                sizes="300px"
+                className="object-cover saturate-[0.7] transition-all duration-500 ease-out"
+                style={{
+                  opacity: previewIndex === index ? 1 : 0,
+                  scale: previewIndex === index ? 1 : 1.1,
+                  filter: previewIndex === index ? "none" : "blur(10px)",
+                }}
+              />
+            ))}
           </div>
-        ))}
-
-        <div
-          className="pt-2 flex justify-end pr-2 opacity-0 animate-slide-up-fade"
-          style={{ animationDelay: `${100 + PROJECTS.length * 100}ms` }}
-        >
-          <Link
-            href="https://github.com/koushikxd?tab=repositories"
-            target="_blank"
-            className="group inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors font-mono uppercase tracking-wider"
-          >
-            <span>View Archive</span>
-            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1 duration-300 ease-out" />
-          </Link>
         </div>
       </div>
-    </section>
+    </div>,
+    document.body
+  );
+}
+
+export function Projects({ step }: { step: number }) {
+  const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+  // Last hovered project, kept after leaving so the image holds while the card fades out
+  const [previewIndex, setPreviewIndex] = useState(0);
+  const canHover = useSyncExternalStore(
+    subscribeToHover,
+    getCanHover,
+    getServerCanHover
+  );
+
+  return (
+    <Section title="Projects" step={step}>
+      {canHover && (
+        <ProjectPreview
+          isVisible={isPreviewVisible}
+          previewIndex={previewIndex}
+        />
+      )}
+
+      <div className="flex flex-col gap-7" data-dim-group>
+        {PROJECTS.map((project, index) => {
+          return (
+            // biome-ignore lint/a11y/noStaticElementInteractions: hover only drives the decorative image preview
+            <div
+              key={project.name}
+              data-dim-item
+              className="enter flex flex-col gap-1"
+              style={{ "--step": step + 1 + index }}
+              onMouseEnter={() => {
+                setIsPreviewVisible(true);
+                setPreviewIndex(index);
+              }}
+              onMouseLeave={() => setIsPreviewVisible(false)}
+            >
+              <div className="flex items-baseline justify-between gap-4">
+                <h3 className="text-base font-medium text-foreground">
+                  <TextLink href={project.url}>{project.name}</TextLink>
+                </h3>
+                <span className="meta shrink-0">[{project.language}]</span>
+              </div>
+
+              <p className="text-base text-muted-foreground leading-relaxed max-w-lg text-pretty">
+                {project.description}
+              </p>
+
+              {project.source && (
+                <div className="pt-0.5 text-sm text-muted-foreground">
+                  <TextLink href={project.source}>source</TextLink>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <p
+        className="enter text-base text-muted-foreground"
+        style={{ "--step": step + 1 + PROJECTS.length }}
+      >
+        More on{" "}
+        <TextLink href={SOCIALS.github} className="text-foreground">
+          GitHub
+        </TextLink>
+      </p>
+    </Section>
   );
 }

@@ -1,33 +1,42 @@
-export function Hero() {
+import { CopyEmail } from "@/components/copy-email";
+import { TextLink } from "@/components/text-link";
+import { SOCIALS } from "@/lib/data";
+
+export function Hero({ step }: { step: number }) {
   return (
-    <section className="flex flex-col gap-6">
-      <div className="space-y-4">
-        <div
-          className="flex items-center justify-between border-b-2 border-muted/80 pb-2 border-dashed opacity-0 animate-slide-up-fade"
-          style={{ animationDelay: "150ms" }}
-        >
-          <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            00 {"//"} About
-          </h2>
-        </div>
-        <h1
-          className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground uppercase font-(family-name:--font-geist-pixel-grid) opacity-0 animate-slide-up-fade"
-          style={{ animationDelay: "150ms" }}
-        >
+    <section className="flex flex-col gap-4">
+      <div
+        className="enter flex flex-wrap items-baseline gap-x-3 gap-y-1"
+        style={{ "--step": step }}
+      >
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground uppercase font-pixel">
           Koushik
         </h1>
-        <div
-          className="flex flex-col gap-2 text-sm text-muted-foreground max-w-xl leading-relaxed pl-0 opacity-0 animate-slide-up-fade"
-          style={{ animationDelay: "300ms" }}
-        >
-          <p>{"-"} SDE @ Steps AI</p>
-          <p>
-            {"-"} I build software. I prefer dark mode, minimalist interfaces,
-            and doing most of my work in the terminal
-          </p>
-          <p>{"//"} neovim btw</p>
-        </div>
+        <span className="meta">[unemployed right now]</span>
       </div>
+
+      <p
+        className="enter text-base leading-relaxed text-muted-foreground max-w-lg text-pretty"
+        style={{ "--step": step + 1 }}
+      >
+        Currently shipping AI agents, I prefer dark mode and minimal interfaces.
+        neovim btw.
+      </p>
+
+      <p
+        className="enter text-base leading-relaxed text-muted-foreground"
+        style={{ "--step": step + 2 }}
+      >
+        You can find me on{" "}
+        <TextLink href={SOCIALS.x} className="text-foreground">
+          X
+        </TextLink>{" "}
+        and{" "}
+        <TextLink href={SOCIALS.github} className="text-foreground">
+          GitHub
+        </TextLink>
+        , or <CopyEmail email={SOCIALS.email} />
+      </p>
     </section>
   );
 }
