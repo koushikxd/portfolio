@@ -4,7 +4,7 @@ export const EXPERIENCE = [
     role: "Software Development Engineer",
     date: "Mar 2026 - Aug 2026",
     description:
-      "Rebuilt their entire frontend, helped ship reliable customer-facing ecommerce AI agents, and handled everything across the stack including backend and cloud.",
+      "Rebuilt the entire frontend and helped ship customer-facing AI agents for ecommerce, working across the whole stack from backend to cloud.",
   },
   {
     company: "Techintelli Solutions (Callensights)",
@@ -37,7 +37,7 @@ export const PROJECTS: Project[] = [
   {
     name: "Relay",
     description:
-      "Multiplayer AI for IT companies. One agent works privately with each employee and with the whole team in Slack, carrying the right memory, files, and permissions into every room.",
+      "Multiplayer AI and a company brain. Teams work alongside AI agents in one shared workspace that carries the company's memory.",
     language: "TypeScript",
     url: "https://relayy-ai.vercel.app/",
     image: "/projects/relay.png",

@@ -18,7 +18,9 @@ export function Experience({ step }: { step: number }) {
               </h3>
               <span className="meta shrink-0">[{exp.date}]</span>
             </div>
-            <p className="meta">{exp.role}</p>
+            <p className="font-mono text-[13px] text-foreground/80">
+              {exp.role}
+            </p>
             <p className="pt-1.5 text-base text-muted-foreground leading-relaxed max-w-lg text-pretty">
               {exp.description}
             </p>
