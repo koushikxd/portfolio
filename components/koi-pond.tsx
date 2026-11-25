@@ -3,12 +3,8 @@
 import { useRef } from "react";
 import { useMountEffect } from "@/hooks/use-mount-effect";
 
-// Dithered koi pond: a brightness field (water, ripples, fish, lily pads)
-// thresholded through a 4x4 Bayer matrix and drawn as square dots, same
-// language as the banner shader.
-
-const CELL = 4; // css px between dot centers
-const DOT = 3; // css px dot size
+const CELL_PX = 4;
+const DOT_PX = 3;
 const FPS = 30;
 
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(
@@ -61,20 +57,18 @@ const KOI: Koi[] = [
   },
 ];
 
-// Positions as fractions of the pond, radius in cells
 const LILY_PADS = [
-  { x: 0.12, y: 0.5, r: 7, notch: 0.6 },
-  { x: 0.2, y: 0.82, r: 4.5, notch: 2.4 },
-  { x: 0.86, y: 0.45, r: 6, notch: 3.6 },
-  { x: 0.92, y: 0.8, r: 3.5, notch: 5.1 },
+  { xRatio: 0.12, yRatio: 0.5, radiusCells: 7, notch: 0.6 },
+  { xRatio: 0.2, yRatio: 0.82, radiusCells: 4.5, notch: 2.4 },
+  { xRatio: 0.86, yRatio: 0.45, radiusCells: 6, notch: 3.6 },
+  { xRatio: 0.92, yRatio: 0.8, radiusCells: 3.5, notch: 5.1 },
 ];
 
-const RIPPLE_SPEED = 14; // cells per second
-const RIPPLE_LIFE = 2.4; // seconds
+const RIPPLE_CELLS_PER_SECOND = 14;
+const RIPPLE_LIFE_SECONDS = 2.4;
 
 function koiPose(koi: Koi, cols: number, rows: number, time: number) {
   const t = koi.phase + time * koi.speed;
-  // Figure-eight loop; heading follows the path's tangent
   const x = cols * (koi.cx + koi.rx * Math.sin(t));
   const y = rows * (koi.cy + koi.ry * Math.sin(2 * t));
   const dx = cols * koi.rx * Math.cos(t);
@@ -96,24 +90,29 @@ function koiBrightness(
 
   const cos = Math.cos(pose.angle);
   const sin = Math.sin(pose.angle);
-  const u = ox * cos + oy * sin; // along the body, head is +
-  let v = -ox * sin + oy * cos; // across the body
-  const s = u / koi.length + 0.5; // 0 tail, 1 head
-  if (s < -0.12 || s > 1) return 0;
+  const along = ox * cos + oy * sin;
+  let across = -ox * sin + oy * cos;
+  const tailToHead = along / koi.length + 0.5;
+  if (tailToHead < -0.12 || tailToHead > 1) return 0;
 
-  v -= Math.sin(time * 6 + koi.phase - s * 4) * (1 - s) * 1.6;
+  across -=
+    Math.sin(time * 6 + koi.phase - tailToHead * 4) * (1 - tailToHead) * 1.6;
 
-  if (s < 0.14) {
-    const spread = (0.14 - s) * koi.width * 7 + 0.6;
-    return Math.abs(v) < spread ? 0.75 : 0;
+  if (tailToHead < 0.14) {
+    const spread = (0.14 - tailToHead) * koi.width * 7 + 0.6;
+    return Math.abs(across) < spread ? 0.75 : 0;
   }
-  const half = koi.width * Math.sin(Math.PI * Math.min(1, s ** 0.75)) + 0.3;
-  if (Math.abs(v) > half) {
-    const fin = s > 0.55 && s < 0.68 && Math.abs(v) < half + 2.2;
+  const half =
+    koi.width * Math.sin(Math.PI * Math.min(1, tailToHead ** 0.75)) + 0.3;
+  if (Math.abs(across) > half) {
+    const fin =
+      tailToHead > 0.55 && tailToHead < 0.68 && Math.abs(across) < half + 2.2;
     return fin ? 0.6 : 0;
   }
   const patch =
-    Math.sin(s * 17 + koi.phase * 3) + Math.sin(v * 1.3 + koi.phase) > 1.1;
+    Math.sin(tailToHead * 17 + koi.phase * 3) +
+      Math.sin(across * 1.3 + koi.phase) >
+    1.1;
   return patch ? 0.3 : 1;
 }
 
@@ -143,8 +142,8 @@ export function KoiPond({ className }: { className?: string }) {
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cols = Math.floor(width / CELL);
-      rows = Math.floor(height / CELL);
+      cols = Math.floor(width / CELL_PX);
+      rows = Math.floor(height / CELL_PX);
     };
 
     const draw = (now: number) => {
@@ -157,7 +156,7 @@ export function KoiPond({ className }: { className?: string }) {
         });
         nextDrop = time + 1.2 + Math.random() * 1.8;
       }
-      while (ripples.length && time - ripples[0].born > RIPPLE_LIFE)
+      while (ripples.length && time - ripples[0].born > RIPPLE_LIFE_SECONDS)
         ripples.shift();
 
       const poses = KOI.map((koi) => koiPose(koi, cols, rows, time));
@@ -176,9 +175,10 @@ export function KoiPond({ className }: { className?: string }) {
           for (const r of ripples) {
             const age = time - r.born;
             const d = Math.hypot(x - r.x, (y - r.y) * 1.6);
-            const ring = d - age * RIPPLE_SPEED;
+            const ring = d - age * RIPPLE_CELLS_PER_SECOND;
             if (ring > -3 && ring < 3) {
-              b += 0.35 * Math.exp(-ring * ring) * (1 - age / RIPPLE_LIFE);
+              b +=
+                0.35 * Math.exp(-ring * ring) * (1 - age / RIPPLE_LIFE_SECONDS);
             }
           }
 
@@ -187,19 +187,19 @@ export function KoiPond({ className }: { className?: string }) {
           }
 
           for (const pad of LILY_PADS) {
-            const dx = x - pad.x * cols;
-            const dy = (y - pad.y * rows) * 1.25;
+            const dx = x - pad.xRatio * cols;
+            const dy = (y - pad.yRatio * rows) * 1.25;
             const d = Math.hypot(dx, dy);
-            if (d < pad.r) {
+            if (d < pad.radiusCells) {
               const a = Math.atan2(dy, dx) - pad.notch;
               const inNotch =
                 Math.abs(Math.atan2(Math.sin(a), Math.cos(a))) < 0.3;
-              if (!inNotch) b = d > pad.r - 1.1 ? 0.85 : 0.22;
+              if (!inNotch) b = d > pad.radiusCells - 1.1 ? 0.85 : 0.22;
             }
           }
 
           if (b > BAYER[(y & 3) * 4 + (x & 3)]) {
-            ctx.fillRect(x * CELL, y * CELL, DOT, DOT);
+            ctx.fillRect(x * CELL_PX, y * CELL_PX, DOT_PX, DOT_PX);
           }
         }
       }
@@ -214,7 +214,6 @@ export function KoiPond({ className }: { className?: string }) {
 
     const startLoop = () => {
       if (!visible) return;
-      // Reduced motion gets one still frame, redrawn on entry so a theme switch is picked up
       if (reducedMotion) return draw(performance.now());
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(loop);
@@ -227,8 +226,8 @@ export function KoiPond({ className }: { className?: string }) {
       lastPointerDrop = now;
       const rect = canvas.getBoundingClientRect();
       ripples.push({
-        x: (e.clientX - rect.left) / CELL,
-        y: (e.clientY - rect.top) / CELL,
+        x: (e.clientX - rect.left) / CELL_PX,
+        y: (e.clientY - rect.top) / CELL_PX,
         born: now,
       });
     };

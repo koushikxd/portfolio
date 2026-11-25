@@ -42,5 +42,4 @@ next-env.d.ts
 .env*.local
 
 web-animation-design/
-/screenshots
 

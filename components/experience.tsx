@@ -1,6 +1,8 @@
 import { Section } from "@/components/section";
 import { EXPERIENCE } from "@/lib/data";
 
+export const EXPERIENCE_STEPS = 1 + EXPERIENCE.length;
+
 export function Experience({ step }: { step: number }) {
   return (
     <Section title="Experience" step={step}>

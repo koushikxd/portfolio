@@ -14,11 +14,8 @@ const subscribeNever = () => () => {};
 export function DitherHeader() {
   const { setTheme, resolvedTheme } = useTheme();
   const [isHovered, setIsHovered] = useState(false);
-  // Flips the shader color on click, before the view transition snapshots the
-  // old page; cleared once the new theme commits.
   const [pendingDark, setPendingDark] = useState<boolean | null>(null);
   const isDark = pendingDark ?? resolvedTheme === "dark";
-  // The theme is unknown on the server, so the shader renders after hydration
   const mounted = useSyncExternalStore(
     subscribeNever,
     () => true,

@@ -25,7 +25,6 @@ async function fetchVisitors(): Promise<number | null> {
   }
 }
 
-// Shared across mounts so StrictMode's dev double-mount can't POST twice
 let visitorsRequest: Promise<number | null> | undefined;
 
 export function VisitorCount() {

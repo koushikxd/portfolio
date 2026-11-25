@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-// Heading enters at `step`; children start from `step + 1`
 export function Section({
   title,
   step,

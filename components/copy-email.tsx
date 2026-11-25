@@ -12,7 +12,7 @@ export function CopyEmail({ email }: { email: string }) {
     try {
       await navigator.clipboard.writeText(email);
     } catch {
-      // Rejects when permission is denied or the context is insecure
+      window.location.href = `mailto:${email}`;
       return;
     }
     setCopied(true);

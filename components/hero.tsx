@@ -2,6 +2,8 @@ import { CopyEmail } from "@/components/copy-email";
 import { TextLink } from "@/components/text-link";
 import { SOCIALS } from "@/lib/data";
 
+export const HERO_STEPS = 3;
+
 export function Hero({ step }: { step: number }) {
   return (
     <section className="flex flex-col gap-4">

@@ -23,7 +23,7 @@ function isContributionsResponse(data: unknown): data is ContributionsResponse {
   );
 }
 
-async function getContributions(): Promise<ContributionsResponse | null> {
+export async function getContributions(): Promise<ContributionsResponse | null> {
   try {
     const res = await fetch(CONTRIBUTIONS_URL, {
       next: { revalidate: 60 * 60 * 24 },
@@ -36,10 +36,15 @@ async function getContributions(): Promise<ContributionsResponse | null> {
   }
 }
 
-export async function GithubGraph({ step }: { step: number }) {
-  const data = await getContributions();
-  if (!data) return null;
+export const GRAPH_STEPS = 2;
 
+export function GithubGraph({
+  step,
+  data,
+}: {
+  step: number;
+  data: ContributionsResponse;
+}) {
   return (
     <Section title="GitHub" step={step}>
       <ContributionGraph

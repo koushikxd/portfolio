@@ -27,9 +27,7 @@ type Project = {
   description: string;
   language: string;
   image: string;
-  /** Where the name links: the live site, or the repo if there isn't one */
   url: string;
-  /** Repo, listed separately only when `url` is a live site */
   source?: string;
 };
 

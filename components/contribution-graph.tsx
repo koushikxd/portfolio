@@ -30,7 +30,6 @@ const monthFormat = new Intl.DateTimeFormat("en-US", {
 
 const toDate = (date: string) => new Date(`${date}T00:00:00Z`);
 
-// Columns are weeks starting on Sunday; the first week is padded so rows line up with weekdays
 function toWeeks(contributions: Contribution[]) {
   const days: (Contribution | null)[] = [];
   if (contributions.length > 0) {
@@ -42,7 +41,6 @@ function toWeeks(contributions: Contribution[]) {
   return weeks;
 }
 
-// Label the week holding the 1st of each month, skipping edges where it would clip
 function toMonthLabels(weeks: (Contribution | null)[][]) {
   const labels: { column: number; label: string }[] = [];
   weeks.forEach((week, column) => {
@@ -85,10 +83,8 @@ export function ContributionGraph({
     y: number;
     width: number;
   } | null>(null);
-  // Separate from tooltip so the last text stays put while it fades out
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
-  // On narrow screens the graph scrolls; open it on the most recent weeks
   useMountEffect(() => {
     const scroller = scrollerRef.current;
     if (scroller) scroller.scrollLeft = scroller.scrollWidth;
@@ -194,7 +190,6 @@ export function ContributionGraph({
         className="pointer-events-none absolute left-0 top-0 whitespace-nowrap rounded-full bg-foreground px-2.5 py-1 text-xs text-background transition-opacity duration-150"
         style={{
           opacity: tooltipVisible ? 1 : 0,
-          // Centered over the dot, clamped inside the graph; % is the tooltip's own size
           transform: tooltip
             ? `translate(clamp(0px, calc(${tooltip.x}px - 50%), calc(${tooltip.width}px - 100%)), calc(${tooltip.y}px - 100% - 6px))`
             : undefined,
