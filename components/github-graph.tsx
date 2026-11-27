@@ -26,7 +26,7 @@ function isContributionsResponse(data: unknown): data is ContributionsResponse {
 export async function getContributions(): Promise<ContributionsResponse | null> {
   try {
     const res = await fetch(CONTRIBUTIONS_URL, {
-      next: { revalidate: 60 * 60 * 24 },
+      next: { revalidate: 60 * 60 * 12 },
     });
     if (!res.ok) return null;
     const data: unknown = await res.json();
