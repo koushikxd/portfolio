@@ -406,14 +406,6 @@ export function KoiPond({ className }: { className?: string }) {
       };
     };
 
-    let lastPointerRipple = 0;
-    const onPointerMove = (e: PointerEvent) => {
-      const now = (performance.now() - start) / 1000;
-      if (now - lastPointerRipple < 0.25) return;
-      lastPointerRipple = now;
-      ripples.push({ ...toCells(e), born: now, strength: 0.5 });
-    };
-
     const onPointerDown = (e: PointerEvent) => {
       const tap = toCells(e);
       ripples.push({
@@ -448,7 +440,6 @@ export function KoiPond({ className }: { className?: string }) {
     observer.observe(canvas);
     window.addEventListener("resize", onResize);
     if (!reducedMotion) {
-      canvas.addEventListener("pointermove", onPointerMove);
       canvas.addEventListener("pointerdown", onPointerDown);
     }
 
@@ -456,7 +447,6 @@ export function KoiPond({ className }: { className?: string }) {
       cancelAnimationFrame(frame);
       observer.disconnect();
       window.removeEventListener("resize", onResize);
-      canvas.removeEventListener("pointermove", onPointerMove);
       canvas.removeEventListener("pointerdown", onPointerDown);
     };
   });
